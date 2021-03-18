@@ -1,5 +1,5 @@
 " Rectangular insert command
-" Version: 0.4.3
+" Version: 0.4.4
 " Author:  hekyou <hekyolabs+vim@gmail.com>
 
 scriptencoding utf-8
@@ -36,10 +36,6 @@ endfunction
 function! rectinsert#replaceTo(line, width)
   let s:lines = split(a:line, ",")
   call s:visual_replace(@*, s:lines[0], s:lines[1], a:width)
-endfunction
-
-function! rectinsert#scriptInsert(opt)
-  call s:script_insert(a:opt)
 endfunction
 
 function! rectinsert#stringInsert(opt, src)
@@ -139,46 +135,3 @@ function! s:visual_replace(src, start, end, width)
     let s:idx = s:idx + 1
   endwhile
 endfunction
-
-function! s:script_insert(opt)
-  let s:filetype = a:opt
-
-  if !exists('s:bufnr')
-    let s:bufnr = -1
-  endif
-  if bufexists(s:bufnr)
-    execute "QuickRun -outputter rectinsert"
-  else
-    setlocal bufhidden=hide buftype=nofile noswapfile
-    execute 'split'
-    execute 'edit [RectInsert]['.s:filetype.']'
-    let s:bufnr = bufnr('%')
-    execute "setlocal filetype=".s:filetype
-  endif
-endfunction
-
-" quickrun outputter
-let s:outputter = {}
-
-function! s:outputter.init(session)
-  let self._size = 0
-  let self._result = ''
-endfunction
-
-function! s:outputter.output(data, session)
-  let self._result .= a:data
-  let self._size += len(a:data)
-endfunction
-
-function! s:outputter.finish(session)
-  if a:session.exit_code
-    echo self._result
-  else
-    execute 'bd! '.s:bufnr
-    unlet s:bufnr
-    call rectinsert#stringInsert("-i", self._result)
-  endif
-endfunction
-
-call quickrun#register_outputter("rectinsert", s:outputter)
-

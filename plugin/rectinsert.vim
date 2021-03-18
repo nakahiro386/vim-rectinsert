@@ -1,5 +1,5 @@
 " Rectangular insert command
-" Version: 0.4.3
+" Version: 0.4.4
 " Author:  hekyou <hekyolabs+vim@gmail.com>
 
 if exists('g:loaded_rectinsert')
@@ -14,7 +14,6 @@ command! -nargs=? -range=0 RectInsert call rectinsert#insert(<q-args>, <count>, 
 command! -nargs=* RectInsertTo call rectinsert#insertTo(<f-args>)
 command! -nargs=? -range=0 RectReplace call rectinsert#replace(<q-args>, <count>)
 command! -nargs=* RectReplaceTo call rectinsert#replaceTo(<f-args>)
-command! -nargs=? RectScriptInsert call rectinsert#scriptInsert(<q-args>)
 command! -nargs=* RectStringInsert call rectinsert#stringInsert(<f-args>)
 
 nnoremap <silent> <Plug>(rectinsert_insert) :<C-u>RectInsert -i<CR>
